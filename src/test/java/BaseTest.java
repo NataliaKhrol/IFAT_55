@@ -19,7 +19,7 @@ public class BaseTest {
         options.addArguments("--window-size=1920,1080");
         options.addArguments("--guest");
         //  options.addArguments("start-maximized");
-        // options.addArguments("--headless");
+      //   options.addArguments("--headless");
 
         driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(7, TimeUnit.SECONDS);
@@ -29,6 +29,6 @@ public class BaseTest {
 
     @AfterMethod
     public void close() {
-       // driver.quit();
+       //  driver.quit();
     }
 }
