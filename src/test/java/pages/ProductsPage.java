@@ -14,7 +14,6 @@ public class ProductsPage extends BasePage {
     private static final String DATA_TEST_PATTERN =
             "[data-test='%s']";
 
-
     By cartBadge = By.xpath("//*[@data-test='shopping-cart-badge']");
 
     public ProductsPage(WebDriver driver) {
