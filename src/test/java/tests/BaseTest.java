@@ -12,6 +12,7 @@ import org.testng.annotations.Parameters;
 import pages.CartPage;
 import pages.LoginPage;
 import pages.ProductsPage;
+import utils.PropertyReader;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +21,8 @@ public class BaseTest {
     LoginPage loginPage;
     ProductsPage productsPage;
     CartPage cartPage;
+    String user;
+    String password;
 
     @Parameters({"browser"})
     @BeforeMethod
@@ -30,7 +33,7 @@ public class BaseTest {
             options.addArguments("--window-size=1920,1080");
             options.addArguments("--guest");
             //  options.addArguments("start-maximized");
-            //options.addArguments("--headless");
+            options.addArguments("--headless");
 
             driver = new ChromeDriver(options);
         } else if (browser.equalsIgnoreCase("edge")) {
@@ -42,6 +45,9 @@ public class BaseTest {
         loginPage = new LoginPage(driver);
         productsPage = new ProductsPage(driver);
         cartPage = new CartPage(driver);
+
+        user = PropertyReader.getProperty("saucedemo.user");
+        password = PropertyReader.getProperty("saucedemo.password");
     }
 
     @AfterMethod

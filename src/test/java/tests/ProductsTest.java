@@ -1,6 +1,7 @@
 package tests;
 
 import org.testng.annotations.Test;
+import user.UserFactory;
 
 import static org.testng.Assert.assertEquals;
 
@@ -10,11 +11,11 @@ public class ProductsTest extends BaseTest {
         System.out.println("ProdTest inc is running in thread: " + Thread.currentThread().getId());
 
         loginPage.open();
-        loginPage.login("standard_user", "secret_sauce");
+        loginPage.login(UserFactory.withAdminPermission());
         productsPage.isPageLoaded("Products");
-       // productsPage.addToCart("Test.allTheThings() T-Shirt (Red)");
+        // productsPage.addToCart("Test.allTheThings() T-Shirt (Red)");
         //productsPage.addToCart("Sauce Labs Bolt T-Shirt");
         productsPage.addToCart(1);
-        assertEquals(productsPage.checkGoodsQuantity(), "3");
+        assertEquals(productsPage.checkGoodsQuantity(), "1");
     }
 }

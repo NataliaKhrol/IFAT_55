@@ -2,28 +2,41 @@ package tests;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import user.User;
+import user.UserFactory;
+import utils.PropertyReader;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+import static user.UserFactory.withAdminPermission;
+import static user.UserFactory.withLockedUserPermission;
 
 public class LoginTest extends BaseTest {
-
-    @DataProvider(name = "invalidData")
+    @DataProvider()
     public Object[][] loginData() {
         return new Object[][]{
-                {"locked_out_user", "secret_sauce", "Epic sadface: Sorry, this user has been locked out."},
-                {"", "secret_sauce", "Epic sadface: Username is required"},
-                {"standard_user", "", "Epic sadface: Password is required"},
-                {"Locked_out_user", "secret_sauce", "Epic sadface: Username and password do not match any user in this service"}
+          /*      {PropertyReader.getProperty("saucedemo.locked_user"),
+                        PropertyReader.getProperty("saucedemo.password"),
+                        "Epic sadface: Sorry, this user has been locked out."},*/
+
+                {UserFactory.withLockedUserPermission(),
+                        "Epic sadface: Sorry, this user has been locked out."},
+
+                {UserFactory.withUsernameOnly(""),
+                        "Epic sadface: Username is required"},
+
+                {UserFactory.withPasswordOnly(""),
+                        "Epic sadface: Password is required"},
+
+                {new User("Locked_out_user", "secret_sauce"),
+                        "Epic sadface: Username and password do not match any user in this service"}
         };
     }
 
-    @Test(description = "Проверка корректного логина", priority = 1, dataProvider = "invalidData")
-    public void checkIncorrectLogin(String user, String password, String errorMsg) {
-        System.out.println("LoginTest inc is running in thread: " + Thread.currentThread().getId());
-
+    @Test(description = "Проверка корректного логина", priority = 1, dataProvider = "loginData")
+    public void checkIncorrectLogin(User user, String errorMsg) {
         loginPage.open();
-        loginPage.login(user, password);
+        loginPage.login(user);
         assertTrue(loginPage.isErrorMsgAppear(), "Error message does not appear");
         assertEquals(loginPage.errorMessageText(), errorMsg);
     }
@@ -33,7 +46,7 @@ public class LoginTest extends BaseTest {
         System.out.println("LoginTest corr is running in thread: " + Thread.currentThread().getId());
 
         loginPage.open();
-        loginPage.login("standard_user", "secret_sauce");
+        loginPage.login(withAdminPermission());
 
         assertTrue(productsPage.isPageLoaded("Products"), "Register btn is not visible");
     }
